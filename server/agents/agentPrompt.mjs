@@ -27,7 +27,7 @@ app.post('/api/chat', async (req, res) => {
         messages: [
           {
             "role": "user",
-            "content": userMessage + " explain to me why the given charity is a good or bad"
+            "content": userMessage + " explain to me why the given charity is a good or bad. Include links of resources you used to prove your point. Format the response in Markdown."
           }
         ]
       });
