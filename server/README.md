@@ -1,0 +1,1 @@
+Command to run virtual environment: source venv/bin/activate
