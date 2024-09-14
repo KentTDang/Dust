@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 import Header from "@/app/components/Header";
@@ -7,30 +7,110 @@ import { PieChart, LineChart } from "react-native-gifted-charts";
 // import ExpenseBlock from "@/app/components/ExpenseBlock";
 // import IncomeBlock from "@/app/components/IncomeBlock";
 // import SpendingBlock from "@/app/components/SpendingBlock";
-import ExpenseList from '@/app/data/expenses.json';
-import incomeList from '@/app/data/income.json';
-import spendingList from '@/app/data/spending.json';
+import ExpenseList from "@/app/data/expenses.json";
+import incomeList from "@/app/data/income.json";
+import spendingList from "@/app/data/spending.json";
 import { Line } from "react-native-svg";
- 
+
 const Page = () => {
-  const pieData = [
+  const [currentData, setCurrentData] = useState(latestData);
+
+  const dPoint = () => {
+    return (
+      <View
+        style={{
+          width: 14,
+          height: 14,
+          backgroundColor: "white",
+          borderWidth: 3,
+          borderRadius: 7,
+          borderColor: "#07BAD1",
+        }}
+      />
+    );
+  };
+  const latestData = [
     {
-      value: 47,
-      color: Colors.tintColor,
-      focused: true,
-      text: "47%",
+      value: 100,
+      // labelComponent: () => ('22 Nov'),
+      customDataPoint: dPoint,
     },
     {
-      value: 40,
-      color: Colors.blue,
-      text: "40%",
+      value: 120,
+      hideDataPoint: true,
     },
     {
-      value: 16,
-      color: Colors.white,
-      text: "16%",
+      value: 210,
+      customDataPoint: dPoint,
     },
-    { value: 3, color: "#FFA5BA", gradientCenterColor: "#FF7F97", text: "3%" },
+    {
+      value: 250,
+      hideDataPoint: true,
+    },
+    {
+      value: 320,
+      // labelComponent: () => lcomp('24 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 310,
+      hideDataPoint: true,
+    },
+    {
+      value: 270,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 240,
+      hideDataPoint: true,
+    },
+    {
+      value: 130,
+      // labelComponent: () => lcomp('26 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 120,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 210,
+      hideDataPoint: true,
+    },
+    {
+      value: 270,
+      // labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 240,
+      hideDataPoint: true,
+    },
+    {
+      value: 120,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 210,
+      // labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 20,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
   ];
 
   return (
@@ -59,43 +139,41 @@ const Page = () => {
                 $1475.<Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
               </Text>
             </View>
-            <View style={{paddingVertical:20,alignItems:'center'}}>
-              <PieChart
-                data={pieData}
-                donut
-                showGradient
-                sectionAutoFocus
-                // focusOnPress
-                semiCircle
-                radius={70}
-                innerRadius={55}
-                innerCircleColor={Colors.black}
-                centerLabelComponent={() => {
-                  return (
-                    <View
-                      style={{ justifyContent: "center", alignItems: "center" }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 22,
-                          color: "white",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        47%
-                      </Text>
-                    </View>
-                  );
-                }}
-              />
-            </View>
           </View>
 
-          {/* <ExpenseBlock expenseList={ExpenseList} />
-
-          <IncomeBlock incomeList={incomeList} />
-
-          <SpendingBlock spendingList={spendingList} /> */}
+          <View
+            style={{
+              marginVertical: 0,
+              paddingVertical: 50,
+              backgroundColor: "#414141",
+            }}
+          >
+            <LineChart
+              isAnimated
+              thickness={3}
+              color="#07BAD1"
+              maxValue={600}
+              noOfSections={3}
+              animateOnDataChange
+              animationDuration={1000}
+              onDataChangeAnimationDuration={300}
+              areaChart
+              yAxisTextStyle={{ color: "lightgray" }}
+              data={latestData}
+              hideDataPoints
+              startFillColor={"rgb(84,219,234)"}
+              endFillColor={"rgb(84,219,234)"}
+              startOpacity={0.4}
+              endOpacity={0.1}
+              spacing={22}
+              backgroundColor="#414141"
+              rulesColor="gray"
+              rulesType="solid"
+              initialSpacing={10}
+              yAxisColor="lightgray"
+              xAxisColor="lightgray"
+            />
+          </View>
         </ScrollView>
       </View>
     </>
