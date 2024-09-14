@@ -14,10 +14,10 @@ const Header = () => {
             }}
             style={styles.userImage}
           />
-          <View style={{ marginLeft: 10 }}>
+          <View style={styles.userTextWrapper}>
             <Text style={[ styles.userText, {fontSize: 12} ]}>Hey, Kent</Text>
             <Text style={[ styles.userText, {fontSize: 16} ]}>
-              Your <Text style={{ fontWeight: "700" }}>Donations</Text>
+              Your <Text style={styles.boldText}>Donations</Text>
             </Text>
           </View>
         </View>
@@ -57,4 +57,6 @@ const styles = StyleSheet.create({
   },
   btnText: { color: Colors.white },
   userText: { color: Colors.white },
+  userTextWrapper: { marginLeft: 10 },
+  boldText: { fontWeight: "bold" },
 });
