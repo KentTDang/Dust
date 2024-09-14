@@ -14,16 +14,16 @@ config({ path: join(__dirname, '../.env') });
 const apiKey = process.env.OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey: apiKey });
 
-const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-        {
-            "role": "user",
-            "content": "explain to me why red cross is a good or bad charity"
+// const completion = await openai.chat.completions.create({
+//     model: "gpt-4o-mini",
+//     messages: [
+//         {
+//             "role": "user",
+//             "content": "explain to me why the given charity is a good or bad"
         
-        }
-    ]
-});
+//         }
+//     ]
+// });
 
 console.log(completion.choices[0].message);
 
@@ -39,7 +39,7 @@ app.post('/api/chat', async (req, res) => {
         messages: [
           {
             "role": "user",
-            "content": userMessage
+            "content": userMessage + " explain to me why the given charity is a good or bad"
           }
         ]
       });
@@ -51,7 +51,7 @@ app.post('/api/chat', async (req, res) => {
     }
   });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

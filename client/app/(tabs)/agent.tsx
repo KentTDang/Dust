@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 
 const Agent = () => {
   const [userMessage, setUserMessage] = useState('');
@@ -7,7 +7,7 @@ const Agent = () => {
 
   async function sendMessage(message: string) {
     try {
-      const response = await fetch('http://localhost:3000/api/chat', {
+      const response = await fetch('http://localhost:3001/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,7 +23,8 @@ const Agent = () => {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <>
+    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80 }}>
       <TextInput
         value={userMessage}
         onChangeText={setUserMessage}
@@ -31,8 +32,20 @@ const Agent = () => {
       />
       <Button title="Send" onPress={() => sendMessage(userMessage)} />
       <Text>AI Response:</Text>
-      <Text>{aiResponse}</Text>
+      <ScrollView >
+        <Text>{aiResponse}</Text>
+      </ScrollView>
     </View>
+
+    <View>
+    {/* <Text>AI Response:</Text>
+      <ScrollView >
+        <Text>{aiResponse}</Text>
+      </ScrollView> */}
+    </View>
+      
+    </>
+
   );
 };
 
