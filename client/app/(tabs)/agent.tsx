@@ -6,7 +6,7 @@ const Agent = () => {
   const [userMessage, setUserMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [loading, setLoading] = useState(false);
-  const charities = require('../../data/charities.json');
+  const charities = require('../data/charities.json');
 
   async function sendMessage(message: string) {
     try {
