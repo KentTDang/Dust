@@ -78,7 +78,7 @@ const Layout = () => {
           }}
         />
       </Tabs>
-      <StatusBar style="light" />
+      <StatusBar barStyle="light-content" />
     </>
   );
 };

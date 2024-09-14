@@ -14,8 +14,6 @@ import { Line } from "react-native-svg";
 import expenseList from "@/app/data/expenses.json";
 
 const Page = () => {
-  const [currentData, setCurrentData] = useState(latestData);
-
   const dPoint = () => {
     return (
       <View
@@ -30,6 +28,7 @@ const Page = () => {
       />
     );
   };
+
   const latestData = [
     {
       value: 100,
@@ -113,6 +112,8 @@ const Page = () => {
       customDataPoint: dPoint,
     },
   ];
+
+  const [currentData, setCurrentData] = useState(latestData);
 
   return (
     <>
