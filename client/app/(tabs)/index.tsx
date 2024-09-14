@@ -4,13 +4,14 @@ import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 import Header from "@/app/components/Header";
 import { PieChart, LineChart } from "react-native-gifted-charts";
-// import ExpenseBlock from "@/app/components/ExpenseBlock";
+import ExpenseBlock from "@/app/components/ExpenseBlock";
 // import IncomeBlock from "@/app/components/IncomeBlock";
-// import SpendingBlock from "@/app/components/SpendingBlock";
+import SpendingBlock from "@/app/components/SpendingBlock";
 import ExpenseList from "@/app/data/expenses.json";
 import incomeList from "@/app/data/income.json";
 import spendingList from "@/app/data/spending.json";
 import { Line } from "react-native-svg";
+import expenseList from "@/app/data/expenses.json";
 
 const Page = () => {
   const [currentData, setCurrentData] = useState(latestData);
@@ -145,7 +146,7 @@ const Page = () => {
             style={{
               marginVertical: 0,
               paddingVertical: 50,
-              backgroundColor: "#414141",
+              backgroundColor: Colors.black,
             }}
           >
             <LineChart
@@ -166,7 +167,7 @@ const Page = () => {
               startOpacity={0.4}
               endOpacity={0.1}
               spacing={22}
-              backgroundColor="#414141"
+              backgroundColor={Colors.black}
               rulesColor="gray"
               rulesType="solid"
               initialSpacing={10}
@@ -174,6 +175,9 @@ const Page = () => {
               xAxisColor="lightgray"
             />
           </View>
+          <ExpenseBlock expenseList={ExpenseList} />
+          {/* <IncomeBlock incomeList={incomeList} /> */}
+          <SpendingBlock spendingList={spendingList} />
         </ScrollView>
       </View>
     </>
