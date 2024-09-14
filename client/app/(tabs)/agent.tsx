@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 const Agent = () => {
   const [userMessage, setUserMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const charities = require('../../data/charities.json');
 
   async function sendMessage(message: string) {
     try {
@@ -31,6 +32,14 @@ const Agent = () => {
         placeholder="Enter your message"
       />
       <Button title="Send" onPress={() => sendMessage(userMessage)} />
+        <ScrollView>
+          {charities.charities.map((charity: string, index: number) => (
+            <View key={index}>
+              <Button title={charity + '\n'} onPress={() => sendMessage(charity)} />
+            </View>
+          ))}
+        </ScrollView>
+        
       <Text>AI Response:</Text>
       <ScrollView >
         <Text>{aiResponse}</Text>
@@ -38,10 +47,10 @@ const Agent = () => {
     </View>
 
     <View>
-    {/* <Text>AI Response:</Text>
+    <Text>AI Response:</Text>
       <ScrollView >
         <Text>{aiResponse}</Text>
-      </ScrollView> */}
+      </ScrollView>
     </View>
       
     </>

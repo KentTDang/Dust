@@ -14,18 +14,6 @@ config({ path: join(__dirname, '../.env') });
 const apiKey = process.env.OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey: apiKey });
 
-// const completion = await openai.chat.completions.create({
-//     model: "gpt-4o-mini",
-//     messages: [
-//         {
-//             "role": "user",
-//             "content": "explain to me why the given charity is a good or bad"
-        
-//         }
-//     ]
-// });
-
-console.log(completion.choices[0].message);
 
 const app = express();
 app.use(cors());
