@@ -56,7 +56,6 @@ const Page = () => {
             marginTop: 20,
           }}
         >
-          
           <Text style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}>
             $1475.<Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
           </Text>
@@ -64,16 +63,42 @@ const Page = () => {
             Total in Donations
           </Text>
         </View>
-        <View>
 
+        <View style={{ gap: 20, paddingHorizontal: 20, paddingTop: 100 }}>
+          <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 700 }}>
+            What's to come?
+          </Text>
+          <View style={{ gap: 20 }}>
+            <Text
+              style={{ color: Colors.white, fontSize: 16, fontWeight: 400 }}
+            >
+              Deductible Tax Summary
+            </Text>
+            <Text
+              style={{ color: Colors.white, fontSize: 16, fontWeight: 400 }}
+            >
+              News Update on Your charities
+            </Text>
+          </View>
         </View>
 
-        <View style={{ gap: 20, paddingHorizontal: 20, paddingVertical: 100 }}>
-          <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 700 }}>What's to come?</Text>
+        <View style={{ gap: 20, paddingHorizontal: 20, paddingTop: 75 }}>
+          <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 700 }}>
+            Inspiration
+          </Text>
           <View style={{ gap: 20 }}>
-            <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 400 }}>Deductible Tax Summary</Text>
-            <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 400 }}>News Update on Your charities</Text>
-
+            <Text
+              style={{ color: Colors.white, fontSize: 16, fontWeight: 400 }}
+            >
+              Finding a way to donate to a charity can be hard, but finding a
+              charity you can trust is even harder. Many Americans argue that
+              they “cannot determine a charity's credibility” and feel
+              “unorganized in their approach to charitable giving” (Fidelity
+              Charitable, 2017). We realized that many people need a quick way
+              to find a trustworthy charity and an easy way to donate. To tackle
+              this issue, we thought, “What better way than to seamlessly
+              integrate donations into your everyday life with a touch of AI?”
+            </Text>
           </View>
         </View>
       </SafeAreaView>
