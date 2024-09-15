@@ -2,7 +2,10 @@
 const dotenv = require('dotenv');
 dotenv.config();  
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Ensure your secret key is correctly set and secure
+import { db, auth } from "../firebaseConfig"
 
+const currentUser = auth.currentUser
+const data = db.collection(currentUser.uid).doc("transactions");
 /**
  * Function to create a Payment Intent with Stripe
  * @param {Object} paymentData - The payment details required to create a payment intent
@@ -41,5 +44,5 @@ async function createPaymentIntent({ amount, currency = 'usd', customerId, payme
     return { error: `Failed to create payment intent: ${error.message}` };
   }
 }
-createPaymentIntent({amount: 238, currency: "usd", customerId: "cus_Qqug4rZ7LOD9ty", paymentMethodId: "pm_card_visa", description:  "CVS Pharmacy"})
+createPaymentIntent({amount: 725, currency: "usd", customerId: "cus_Qqug4rZ7LOD9ty", paymentMethodId: "pm_card_visa", description:  "Starbucks"})
 module.exports = createPaymentIntent;

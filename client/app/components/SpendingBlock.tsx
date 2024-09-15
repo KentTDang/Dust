@@ -6,6 +6,8 @@ import { WalletCardIcon } from "@/constants/icons";
 import { fetchTransactions } from '@/stripe/transaction';
 import io from 'socket.io-client';
 import CharityBlock from '../components/CharityBlock'; // Ensure this component exists and is correctly imported
+import { db, auth } from '@/firebaseConfig';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 
 interface Transaction {
   id: string;
@@ -20,15 +22,32 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   let icon = <WalletCardIcon width={22} height={22} color={Colors.white} />;
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [processedTimestamps] = useState(new Set<number>());
+
+  async function addUniqueTransactions(newTransactions: Transaction[]) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      console.error('No user is currently signed in');
+      return;
+    }
+    const userTransactionsRef = collection(db, currentUser.uid, 'transactions');
+
+    for (const transaction of newTransactions) {
+      const transactionDocRef = doc(userTransactionsRef, transaction.created.toString());
+      const docSnap = await getDoc(transactionDocRef);
+
+      if (!docSnap.exists()) {
+        await setDoc(transactionDocRef, transaction);
+      }
+    }
+  }
 
   useEffect(() => {
-    // Fetch initial transactions
     fetchTransactions().then((data) => {
-      console.log("Fetched Transactions:", data); // Log all transactions to inspect statuses
-      const succeededTransactions = data.filter((transaction: Transaction) => {
-        console.log("Transaction Status:", transaction.status); // Check each status
-        return transaction.status.toLowerCase() === "succeeded"; // Case-insensitive check
-      });
+      const succeededTransactions = data.filter(
+        (transaction: Transaction) => transaction.status.toLowerCase() === "succeeded"
+      );
+      addUniqueTransactions(succeededTransactions);
       setTransactions(succeededTransactions);
     });
 
@@ -37,10 +56,9 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
 
     // Listen for new transaction events
     socket.on('new_transaction', (newTransaction: Transaction) => {
-      console.log("New Transaction Received:", newTransaction.status); // Log new transaction status
-      // Only add the transaction if it succeeded
       if (newTransaction.status.toLowerCase() === "succeeded") {
-        setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
+        addUniqueTransactions([newTransaction]);
+        setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
       }
     });
 
@@ -51,6 +69,7 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   }, []);
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
+    
     <Text style={styles.transactionItem}>
       Amount: ${item.amount / 100}
     </Text>
