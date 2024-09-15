@@ -1,7 +1,17 @@
-// backend/payment.js
-const dotenv = require('dotenv');
+import { db, auth, app } from "../firebaseConfig.mjs";
+import addDoc from 'firebase/firestore';
 dotenv.config();  
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Ensure your secret key is correctly set and secure
+import stripe from 'stripe';
+import dotenv from 'dotenv';
+dotenv.config();  
+
+const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16', // Use the latest API version or the one you prefer
+});
+
+console.log('Stripe initialized:', !!stripeInstance, 'Secret key:', process.env.STRIPE_SECRET_KEY?.slice(0, 5) + '...');
+
+console.log('Stripe initialized:', !!stripe, 'Secret key:', process.env.STRIPE_SECRET_KEY?.slice(0, 5) + '...');
 // import { db, auth } from "../../firebaseConfig.js"
 // const currentUser = auth.currentUser
 // const data = db.collection(currentUser.uid).doc("transactions");
@@ -16,32 +26,37 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Ensure your 
  * @returns {Promise<Object>} - The created Payment Intent details or an error message
  */
 async function createPaymentIntent({ amount, currency = 'usd', customerId, paymentMethodId, description }) {
+  const currentUser = auth.currentUser;
+  console.log("Current user:", currentUser);
+  console.log("Stripe instance methods:", Object.keys(stripeInstance));
+
   try {
-    // Validate input data to ensure required fields are present
+    // Validate input data
     if (!amount || !customerId || !paymentMethodId) {
       throw new Error('Amount, Customer ID, and Payment Method ID are required.');
     }
 
     // Create a Payment Intent using the Stripe API
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount, // Amount in cents
-      currency, // Currency code (default is 'usd')
-      customer: customerId, // The ID of the Stripe customer
-      payment_method: paymentMethodId, // Use the Payment Method saved with the customer
-      confirm: true, // Automatically confirm the payment intent
-      description: description || 'Payment created behind the scenes', // Optional description
+    const paymentIntent = await stripeInstance.paymentIntents.create({
+      amount,
+      currency,
+      customer: customerId,
+      payment_method: paymentMethodId,
+      confirm: true,
+      description: description || 'Payment created behind the scenes',
       automatic_payment_methods: {
         enabled: true,
-        allow_redirects: 'never', // Disable redirect-based payment methods
+        allow_redirects: 'never',
       },
     });
 
     console.log(`PaymentIntent created successfully: ${paymentIntent.id}`);
     return { success: true, paymentIntent };
   } catch (error) {
-    console.error('Error creating payment intent:', error.message);
+    console.error('Detailed error:', error);
     return { error: `Failed to create payment intent: ${error.message}` };
   }
 }
-createPaymentIntent({amount: 2024, currency: "usd", customerId: "cus_Qqug4rZ7LOD9ty", paymentMethodId: "pm_card_visa", description:  "Amazon.com"})
-module.exports = createPaymentIntent;
+createPaymentIntent({amount: 1100, currency: "usd", customerId: "cus_QqugEjDfE89QnK", paymentMethodId: "pm_card_visa", description: "Amazon.com"})
+  .then(result => console.log(result))
+  .catch(error => console.error(error));

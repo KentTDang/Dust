@@ -1,7 +1,7 @@
 // CharityBlock.js
 import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { db } from "../../firebaseConfig"; // Ensure the correct path
+import { db } from "../../firebaseConfig.mjs"; // Ensure the correct path
 import { collection, getDocs } from "firebase/firestore";
 
 const CharityBlock = () => {

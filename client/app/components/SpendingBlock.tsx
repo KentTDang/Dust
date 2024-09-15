@@ -27,7 +27,7 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   async function addUniqueTransactions(newTransactions: Transaction[]) {
     const currentUser = auth.currentUser;
     if (!currentUser) {
-      console.error('No user is currently signed in');
+      // console.error('No user is currently signed in');
       return;
     }
     const userTransactionsRef = collection(db, currentUser.uid, 'transactions');
