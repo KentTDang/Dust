@@ -8,7 +8,6 @@ import ExpenseBlock from "@/app/components/ExpenseBlock";
 // import IncomeBlock from "@/app/components/IncomeBlock";
 import SpendingBlock from "@/app/components/SpendingBlock";
 import ExpenseList from "@/app/data/expenses.json";
-import incomeList from "@/app/data/income.json";
 import spendingList from "@/app/data/spending.json";
 import { Line } from "react-native-svg";
 import expenseList from "@/app/data/expenses.json";
@@ -113,9 +112,6 @@ const Page = () => {
       customDataPoint: dPoint,
     },
   ];
-  const [currentData, setCurrentData] = useState(latestData);
-
-
   const [currentData, setCurrentData] = useState(latestData);
 
   return (

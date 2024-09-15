@@ -1,5 +1,4 @@
 // CharityBlock.js
-
 import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebaseConfig"; // Ensure the correct path
@@ -12,7 +11,7 @@ const CharityBlock = () => {
     const fetchData = async () => {
       try {
         // Fetch documents from the 'test' collection
-        const querySnapshot = await getDocs(collection(db, "user_donations"));
+        const querySnapshot = await getDocs(collection(db, "users"));
 
         // Map the documents to extract data
         const fetchedData = querySnapshot.docs.map((doc) => ({
@@ -33,9 +32,7 @@ const CharityBlock = () => {
       <Text>CharityBlock</Text>
       {data.map((item) => (
         <View key={item.id}>
-          <Text>{item.charities}</Text>
-          <Text>{item.amount}</Text>
-          {/* <Text>{JSON.stringify(item)}</Text> */}
+          <Text>{item.name}</Text>
         </View>
       ))}
     </View>
