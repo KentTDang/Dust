@@ -7,12 +7,12 @@ import { getFirestore } from "firebase/firestore"; // Import Firestore directly
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID
+  apiKey: "AIzaSyCg48k9qpJXWTyIXMk8nnE_KmFrgK9BBUs",
+  authDomain: "hophacks2024-80069.firebaseapp.com",
+  projectId: "hophacks2024-80069",
+  storageBucket: "hophacks2024-80069.appspot.com",
+  messagingSenderId: "764593228603",
+  appId: "1:764593228603:web:7d2d0c6249dbd768ba451e"
 };
 
 // Initialize Firebase

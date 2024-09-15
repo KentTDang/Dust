@@ -14,6 +14,9 @@ import expenseList from "@/app/data/expenses.json";
 
 const Page = () => {
 
+
+
+  
   const dPoint = () => {
     return (
       <View

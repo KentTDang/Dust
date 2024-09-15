@@ -17,6 +17,8 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
+    "alert": "^6.0.2",
+    "axios": "^1.7.7",
     "color-convert": "^2.0.1",
     "expo": "~51.0.28",
     "expo-constants": "~16.0.2",
@@ -28,6 +30,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
+    "express": "^4.21.0",
     "firebase": "^10.13.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -40,7 +43,10 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-svg-transformer": "^1.5.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "stripe": "^16.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
