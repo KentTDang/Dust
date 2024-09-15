@@ -10,7 +10,6 @@ import SpendingBlock from "@/app/components/SpendingBlock";
 import ExpenseList from "@/app/data/expenses.json";
 import spendingList from "@/app/data/spending.json";
 import { Line } from "react-native-svg";
-import expenseList from "@/app/data/expenses.json";
 
 const Page = () => {
 
@@ -135,7 +134,7 @@ const Page = () => {
           >
             <View style={{ gap: 10 }}>
               <Text style={{ color: Colors.white, fontSize: 16 }}>
-                My <Text style={{ fontWeight: 700 }}>Expenses</Text>
+                My <Text style={{ fontWeight: 700 }}>Donations</Text>
               </Text>
               <Text
                 style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}

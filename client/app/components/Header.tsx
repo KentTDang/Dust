@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "@/constants/Colors";
-
+import { auth } from "@/firebaseConfig";
 const Header = () => {
   return (
     <SafeAreaView style={styles.container}>
@@ -10,7 +10,7 @@ const Header = () => {
         <View style={styles.userInfoWrapper}>
           <Image
             source={{
-              uri: "https://avatars.githubusercontent.com/u/10240250?v=4",
+              uri: auth.currentUser?.photoURL || "https://avatars.githubusercontent.com/u/10240250?v=4",
             }}
             style={styles.userImage}
           />
