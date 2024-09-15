@@ -78,7 +78,7 @@ createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD
 
   async function createCharityPayment(paymentIntent) {
 
-    const price = Math.round(paymentIntent.amount / 100) * 100;
+    const price = Math.ceil(paymentIntent.amount / 100) * 100;
     let sendAmount = price - paymentIntent.amount;
     if(sendAmount < 50) {
       sendAmount = 50;
