@@ -7,6 +7,7 @@ import { fetchTransactions } from '@/stripe/transaction';
 import io from 'socket.io-client';
 import { db, auth } from '@/firebaseConfig';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import createPaymentIntent from '@/stripe/payment.js';
 
 // Define the Transaction type
 interface Transaction {
@@ -21,6 +22,9 @@ interface Transaction {
 export const calculateTotalDonations = (transactions: Transaction[]): number => {
   return transactions.reduce((acc, transaction) => acc + transaction.amount, 0) / 100;
 };
+}
+
+
 
 const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   let icon = <WalletCardIcon width={22} height={22} color={Colors.white} />;
@@ -40,7 +44,16 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
         await setDoc(transactionDocRef, transaction);
       }
     }
+
+  let changeAmount = 0;
+  let paymentDetails = {
+    amount: changeAmount,
+    currency: 'usd',
+    customerId: 'cus_QqugEjDfE89QnK',
+    paymentMethodId: 'pm_card_visa',
+    description: 'Red Cross Donation',
   }
+
 
   useEffect(() => {
     // Fetch transactions and calculate total donations
@@ -48,7 +61,6 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
       const succeededTransactions = data.filter(
         (transaction: Transaction) => transaction.status.toLowerCase() === "succeeded"
       );
-      addUniqueTransactions(succeededTransactions);
       setTransactions(succeededTransactions);
 
       const total = calculateTotalDonations(succeededTransactions);
@@ -63,8 +75,30 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
         setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
 
         setTotalDonations((prevTotal) => prevTotal + newTransaction.amount / 100);
+      // Loop through transactions
+      succeededTransactions.map((transaction: Transaction) => {
+        let roundedAmount = Math.round(transaction.amount / 100);
+        roundedAmount = roundedAmount * 100
+        let changeAmount = roundedAmount - transaction.amount
+        if(transactions.find(trans => trans.amount !== changeAmount)) {
+        }
+      });
+    });
+
+    const socket = io("http://localhost:3000"); 
+
+    socket.on('new_transaction', (newTransaction: Transaction) => {
+      if (newTransaction.status.toLowerCase() === "succeeded") {
+        setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
+
+        // Loop through transactions
+        [newTransaction].map((transaction) => {
+          console.log(transaction);
+          // ... other operations ...
+        });
       }
     });
+    
 
     return () => {
       socket.disconnect();
@@ -80,6 +114,11 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     const date = new Date(unix * 1000);
     return date.toLocaleDateString();
   };
+
+  
+
+
+
 
   return (
     <View style={styles.spendingSectionWrapper}>

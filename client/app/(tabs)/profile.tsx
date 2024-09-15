@@ -3,7 +3,7 @@ import React from "react";
 import { WalletCardIcon } from "@/constants/icons";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
-import { auth } from "@/firebaseConfig";
+import { auth } from "../../firebaseConfig.mjs";
 import { signOut } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";

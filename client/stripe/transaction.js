@@ -1,4 +1,3 @@
-// backend/transaction.js
 
 import axios from 'axios';
 

@@ -23,13 +23,18 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
-        router.replace('/(tabs)');
-      } else {
-        router.replace('/App');
+      try {
+        if (currentUser) {
+          router.replace('/(tabs)');
+        } else {
+          router.replace('/App');
+        }
+      } catch (error) {
+        console.log(error);
       }
+      
     });
 
     return unsubscribe;
