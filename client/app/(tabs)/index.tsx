@@ -13,6 +13,9 @@ import { Line } from "react-native-svg";
 
 const Page = () => {
 
+
+
+  
   const dPoint = () => {
     return (
       <View
