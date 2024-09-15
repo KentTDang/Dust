@@ -8,15 +8,17 @@ import io from 'socket.io-client';
 import CharityBlock from '../components/CharityBlock'; // Ensure this component exists and is correctly imported
 import { db, auth } from '@/firebaseConfig';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import createPaymentIntent from '@/stripe/payment.js';
 
 interface Transaction {
   id: string;
   amount: number;
   created: number;
   description: string;
-  status: string; // Ensure status field exists
-  // Add other relevant fields if needed
+  status: string; 
 }
+
+
 
 const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   let icon = <WalletCardIcon width={22} height={22} color={Colors.white} />;
@@ -42,6 +44,17 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     }
   }
 
+
+  let changeAmount = 0;
+  let paymentDetails = {
+    amount: changeAmount,
+    currency: 'usd',
+    customerId: 'cus_QqugEjDfE89QnK',
+    paymentMethodId: 'pm_card_visa',
+    description: 'Red Cross Donation',
+  }
+
+
   useEffect(() => {
     fetchTransactions().then((data) => {
       const succeededTransactions = data.filter(
@@ -49,24 +62,37 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
       );
       addUniqueTransactions(succeededTransactions);
       setTransactions(succeededTransactions);
+
+      // Loop through transactions
+      succeededTransactions.map((transaction: Transaction) => {
+        let roundedAmount = Math.round(transaction.amount / 100);
+        roundedAmount = roundedAmount * 100
+        let changeAmount = roundedAmount - transaction.amount
+        if(transactions.find(trans => trans.amount !== changeAmount)) {
+        }
+      });
     });
 
-    // Set up WebSocket connection
-    const socket = io("http://localhost:3000"); // Use the backend URL from .env
+    const socket = io("http://localhost:3000"); 
 
-    // Listen for new transaction events
     socket.on('new_transaction', (newTransaction: Transaction) => {
       if (newTransaction.status.toLowerCase() === "succeeded") {
         addUniqueTransactions([newTransaction]);
         setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
+
+        // Loop through transactions
+        [newTransaction].map((transaction) => {
+          console.log(transaction);
+          // ... other operations ...
+        });
       }
     });
+    
 
-    // Clean up the socket connection on component unmount
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [transactions]);
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
     
@@ -80,6 +106,11 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     const formattedDate = date.toLocaleDateString();
     return formattedDate;
   };
+
+  
+
+
+
 
   return (
     <View style={styles.spendingSectionWrapper}>
