@@ -51,17 +51,23 @@ async function createPaymentIntent({ amount, currency = 'usd', customerId, payme
       },
     });
 
-    await addDoc(collection(db, "users"), {
-      id: paymentIntent.id,
-      customerId: paymentIntent.customer,
-      amount: paymentIntent.amount,
-      currency: paymentIntent.currency,
-      status: paymentIntent.status,
-      created: paymentIntent.created,
-      description: paymentIntent.description
-    }).then(() => {
-      createCharityPayment(paymentIntent);      
-    });
+    try {
+      await addDoc(collection(db, "users"), {
+        id: paymentIntent.id,
+        customerId: paymentIntent.customer,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency,
+        status: paymentIntent.status,
+        created: paymentIntent.created,
+        description: paymentIntent.description
+      });
+      await createCharityPayment(paymentIntent);
+    } catch (error) {
+      console.error('Detailed error:', error);
+      return { error: `Failed to create payment intent: ${error.message}` };
+    }
+
+    
 
 
     console.log(`PaymentIntent created successfully: ${paymentIntent.id}`);
@@ -84,20 +90,26 @@ createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD
       sendAmount = 50;
     }
 
-    const paymentIntent2 = await stripeInstance.paymentIntents.create({
-      amount: sendAmount,
-      currency: "usd",
-      customer: "cus_QqugEjDfE89QnK",
-      payment_method: "pm_card_visa",
-      confirm: true,
-      description: "Red Cross Donation" || 'Payment created behind the scenes',
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'never',
-      },
-    });
-      
-       addDoc(collection(db, "charities"), {
+    try{
+      const paymentIntent2 = await stripeInstance.paymentIntents.create({
+        amount: sendAmount,
+        currency: "usd",
+        customer: "cus_QqugEjDfE89QnK",
+        payment_method: "pm_card_visa",
+        confirm: true,
+        description: "Red Cross Donation" || 'Payment created behind the scenes',
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: 'never',
+        },
+      });
+    }catch(error){
+      console.error('Detailed error:', error);
+      return { error: `Failed to create payment intent: ${error.message}` };
+    }
+
+    try {
+      addDoc(collection(db, "charities"), {
         id: paymentIntent.id,
         customerId: "cus_QqugEjDfE89QnK",
         currency: price - paymentIntent.currency,
@@ -105,4 +117,8 @@ createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD
         created: paymentIntent.created,
         description: "Red Cross Donation"
       });
+    } catch(error){
+      console.error('Detailed error:', error);
+    }
+       
   }
