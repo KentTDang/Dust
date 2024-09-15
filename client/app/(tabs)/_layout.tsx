@@ -1,10 +1,24 @@
 import { View, Text, StatusBar } from "react-native";
-import React from "react";
-import { Tabs } from "expo-router";
+import React, {useEffect} from "react";
+import { Tabs, useRouter } from "expo-router";
 import { FontAwesome, SimpleLineIcons, AntDesign } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebaseConfig";
 
 const Layout = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if(!currentUser) {
+        router.replace("/App");
+      }
+    });
+
+    return unsubscribe;
+  },[]);
+
   return (
     <>
       <Tabs
@@ -57,6 +71,22 @@ const Layout = () => {
                 }}
               >
                 <AntDesign name="swap" size={18} color={color} />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="charities"
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <View
+                style={{
+                  padding: 12,
+                  borderRadius: 30,
+                  backgroundColor: focused ? Colors.tintColor : Colors.grey,
+                }}
+              >
+                <AntDesign name="heart" size={18} color={color} />
               </View>
             ),
           }}
