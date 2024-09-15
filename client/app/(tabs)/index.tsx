@@ -29,6 +29,7 @@ const Page = () => {
       />
     );
   };
+
   const latestData = [
     {
       value: 100,
@@ -114,6 +115,8 @@ const Page = () => {
   ];
   const [currentData, setCurrentData] = useState(latestData);
 
+
+  const [currentData, setCurrentData] = useState(latestData);
 
   return (
     <>
