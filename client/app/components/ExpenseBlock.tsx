@@ -19,11 +19,11 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
     if (index == 0) {
       return (
         <TouchableOpacity onPress={() => {}}>
-          <View
+          {/* <View
             style={styles.addItemBtn}
           >
             <Feather name="plus" size={22} color={"#ccc"} />
-          </View>
+          </View> */}
         </TouchableOpacity>
       );
     }
@@ -113,17 +113,6 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
 export default ExpenseBlock;
 
 const styles = StyleSheet.create({
-  addItemBtn: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: "#666",
-    borderStyle: "dashed",
-    borderRadius: 10,
-    marginRight: 20,
-    padding:20,
-    justifyContent: 'center',
-    alignItems:'center'
-  },
   expenseBlock: {
     backgroundColor: Colors.tintColor,
     width: 100,
