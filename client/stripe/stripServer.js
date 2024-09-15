@@ -15,32 +15,26 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Correct init
 const app = express();
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET; // Webhook secret for validating events from Stripe
 
-// Use CORS to handle cross-origin requests from your frontend
 app.use(cors());
 
-// Use JSON body parser for all incoming requests
 app.use(bodyParser.json());
 
-// Webhook route: Set up raw body parser specifically for Stripe webhooks
 app.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
   try {
-    // Verify and construct the event
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.log(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle relevant event types
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
     console.log(`PaymentIntent was successful: ${paymentIntent.id}`);
 
-    // Emit event to clients via WebSocket
-    io.emit('new_transaction', paymentIntent); // Correctly emit the new transaction event
+    io.emit('new_transaction', paymentIntent); 
   }
 
   res.status(200).send('Received');

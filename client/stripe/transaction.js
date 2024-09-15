@@ -11,7 +11,6 @@ export async function fetchTransactions() {
     },
     });
 
-    // Log the list of transactions
     return response.data.data;
   } catch (error) {
     console.error('Error fetching transactions:', error.response ? error.response.data : error.message);

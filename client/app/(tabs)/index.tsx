@@ -83,6 +83,7 @@ const Page = () => {
               <Text
                 style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}
               >
+                $86.<Text style={{ fontSize: 22, fontWeight: 400 }}>06</Text>
                 ${totalDonations}
               </Text>
             </View>
@@ -121,7 +122,7 @@ const Page = () => {
               xAxisColor="lightgray"
             />
           </View>
-          <ExpenseBlock expenseList={ExpenseList} />
+          <ExpenseBlock expenseList={ExpenseList} customerId="cus_Qqz1iRvKc0cOXp" />
           {/* <IncomeBlock incomeList={incomeList} /> */}
           <SpendingBlock spendingList={spendingList} />
         </ScrollView>
