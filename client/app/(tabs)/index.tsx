@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 import Header from "@/app/components/Header";
@@ -10,11 +10,40 @@ import SpendingBlock from "@/app/components/SpendingBlock";
 import ExpenseList from "@/app/data/expenses.json";
 import spendingList from "@/app/data/spending.json";
 import { Line } from "react-native-svg";
+import { db, auth } from "../../firebaseConfig.mjs";
+import { doc, getDocs, collection, query, orderBy } from "firebase/firestore";
+
+interface Donation {
+  value: number;
+  customDataPoint: () => ReactNode;
+}
 
 const Page = () => {
 
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [totalDonations, setTotalDonations] = useState(0);
 
+  useEffect(() => {
+    const fetchDonations = async () => {
+      try {
+        const q = query(collection(db, "users"), orderBy("created", "desc"));
+        const querySnapshot = await getDocs(q);
+        const donationData = querySnapshot.docs.map(doc => ({
+          value: doc.data().amount, // Convert cents to dollars
+          customDataPoint: dPoint,
+        }));
+        setDonations(donationData);
+        const total = donationData.reduce((sum, donation) => sum + donation.value, 0);
+        console.log("Total donations:", total);
+        console.log("Donations:", donations);
+        setTotalDonations(total);
+      } catch (error) {
+        console.error("Error fetching donations:", error);
+      }
+    };
 
+    fetchDonations();
+  }, []);
   
   const dPoint = () => {
     return (
@@ -30,91 +59,6 @@ const Page = () => {
       />
     );
   };
-
-  const latestData = [
-    {
-      value: 100,
-      // labelComponent: () => ('22 Nov'),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 120,
-      hideDataPoint: true,
-    },
-    {
-      value: 210,
-      customDataPoint: dPoint,
-    },
-    {
-      value: 250,
-      hideDataPoint: true,
-    },
-    {
-      value: 320,
-      // labelComponent: () => lcomp('24 Nov'),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 310,
-      hideDataPoint: true,
-    },
-    {
-      value: 270,
-      customDataPoint: dPoint,
-    },
-    {
-      value: 240,
-      hideDataPoint: true,
-    },
-    {
-      value: 130,
-      // labelComponent: () => lcomp('26 Nov'),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 120,
-      hideDataPoint: true,
-    },
-    {
-      value: 100,
-      customDataPoint: dPoint,
-    },
-    {
-      value: 210,
-      hideDataPoint: true,
-    },
-    {
-      value: 270,
-      // labelComponent: () => lcomp('28 Nov'),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 240,
-      hideDataPoint: true,
-    },
-    {
-      value: 120,
-      hideDataPoint: true,
-    },
-    {
-      value: 100,
-      customDataPoint: dPoint,
-    },
-    {
-      value: 210,
-      // labelComponent: () => lcomp('28 Nov'),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 20,
-      hideDataPoint: true,
-    },
-    {
-      value: 100,
-      customDataPoint: dPoint,
-    },
-  ];
-  const [currentData, setCurrentData] = useState(latestData);
 
   return (
     <>
@@ -139,7 +83,7 @@ const Page = () => {
               <Text
                 style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}
               >
-                $1475.<Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
+                ${totalDonations}
               </Text>
             </View>
           </View>
@@ -155,14 +99,14 @@ const Page = () => {
               isAnimated
               thickness={3}
               color="#07BAD1"
-              maxValue={600}
+              maxValue={9000}
               noOfSections={3}
               animateOnDataChange
               animationDuration={1000}
               onDataChangeAnimationDuration={300}
               areaChart
               yAxisTextStyle={{ color: "lightgray" }}
-              data={latestData}
+              data={donations}
               hideDataPoints
               startFillColor={"rgb(84,219,234)"}
               endFillColor={"rgb(84,219,234)"}
