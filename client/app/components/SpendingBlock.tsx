@@ -24,26 +24,6 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   let icon = <WalletCardIcon width={22} height={22} color={Colors.white} />;
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [processedTimestamps] = useState(new Set<number>());
-
-  async function addUniqueTransactions(newTransactions: Transaction[]) {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      // console.error('No user is currently signed in');
-      return;
-    }
-    const userTransactionsRef = collection(db, currentUser.uid, 'transactions');
-
-    for (const transaction of newTransactions) {
-      const transactionDocRef = doc(userTransactionsRef, transaction.created.toString());
-      const docSnap = await getDoc(transactionDocRef);
-
-      if (!docSnap.exists()) {
-        await setDoc(transactionDocRef, transaction);
-      }
-    }
-  }
-
 
   let changeAmount = 0;
   let paymentDetails = {
@@ -60,7 +40,6 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
       const succeededTransactions = data.filter(
         (transaction: Transaction) => transaction.status.toLowerCase() === "succeeded"
       );
-      addUniqueTransactions(succeededTransactions);
       setTransactions(succeededTransactions);
 
       // Loop through transactions
@@ -77,7 +56,6 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
 
     socket.on('new_transaction', (newTransaction: Transaction) => {
       if (newTransaction.status.toLowerCase() === "succeeded") {
-        addUniqueTransactions([newTransaction]);
         setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
 
         // Loop through transactions
