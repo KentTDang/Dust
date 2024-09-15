@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
 });
 
 // Correctly import the payment routes
-const paymentRoutes = require('./payment'); // Ensure this path points to the correct location of payment.js
+const paymentRoutes = require('./payment.js'); // Ensure this path points to the correct location of payment.js
 app.use('/api', paymentRoutes); // Integrate payment routes under /api path
 
 server.listen(3000, () => {
