@@ -71,14 +71,14 @@ async function createPaymentIntent({ amount, currency = 'usd', customerId, payme
     return { error: `Failed to create payment intent: ${error.message}` };
   }
 }
-createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD9ty", paymentMethodId: "pm_card_visa", description: "Uniqlo"})
+createPaymentIntent({amount: 719, currency: "usd", customerId: "cus_Qqz1vDUETm5sc2", paymentMethodId: "pm_card_visa", description: "Dunkin Donuts"})
   .then(result => console.log(result))
   .catch(error => console.error(error));
 
 
   async function createCharityPayment(paymentIntent) {
 
-    const price = Math.round(paymentIntent.amount / 100) * 100;
+    const price = Math.ceil(paymentIntent.amount / 100) * 100;
     let sendAmount = price - paymentIntent.amount;
     if(sendAmount < 50) {
       sendAmount = 50;
@@ -87,7 +87,7 @@ createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD
     const paymentIntent2 = await stripeInstance.paymentIntents.create({
       amount: sendAmount,
       currency: "usd",
-      customer: "cus_QqugEjDfE89QnK",
+      customer: "cus_Qqz1iRvKc0cOXp",
       payment_method: "pm_card_visa",
       confirm: true,
       description: "Red Cross Donation" || 'Payment created behind the scenes',
@@ -99,7 +99,7 @@ createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD
       
        addDoc(collection(db, "charities"), {
         id: paymentIntent.id,
-        customerId: "cus_QqugEjDfE89QnK",
+        customerId: "cus_Qqz1iRvKc0cOXp",
         currency: price - paymentIntent.currency,
         status: paymentIntent.status,
         created: paymentIntent.created,

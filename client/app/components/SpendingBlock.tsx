@@ -1,35 +1,35 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SpendingType } from "@/types";
 import Colors from "@/constants/Colors";
 import { WalletCardIcon } from "@/constants/icons";
 import { fetchTransactions } from '@/stripe/transaction';
 import io from 'socket.io-client';
-import CharityBlock from '../components/CharityBlock'; // Ensure this component exists and is correctly imported
 import { db, auth } from '@/firebaseConfig';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 
+// Define the Transaction type
 interface Transaction {
   id: string;
   amount: number;
   created: number;
   description: string;
-  status: string; // Ensure status field exists
-  // Add other relevant fields if needed
+  status: string;
 }
+
+// Function to calculate total donations
+export const calculateTotalDonations = (transactions: Transaction[]): number => {
+  return transactions.reduce((acc, transaction) => acc + transaction.amount, 0) / 100;
+};
 
 const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   let icon = <WalletCardIcon width={22} height={22} color={Colors.white} />;
-
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [processedTimestamps] = useState(new Set<number>());
+  const [totalDonations, setTotalDonations] = useState(0);
 
   async function addUniqueTransactions(newTransactions: Transaction[]) {
     const currentUser = auth.currentUser;
-    if (!currentUser) {
-      // console.error('No user is currently signed in');
-      return;
-    }
+    if (!currentUser) return;
     const userTransactionsRef = collection(db, currentUser.uid, 'transactions');
 
     for (const transaction of newTransactions) {
@@ -43,42 +43,42 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
   }
 
   useEffect(() => {
+    // Fetch transactions and calculate total donations
     fetchTransactions().then((data) => {
       const succeededTransactions = data.filter(
         (transaction: Transaction) => transaction.status.toLowerCase() === "succeeded"
       );
       addUniqueTransactions(succeededTransactions);
       setTransactions(succeededTransactions);
+
+      const total = calculateTotalDonations(succeededTransactions);
+      setTotalDonations(total);
     });
 
-    // Set up WebSocket connection
-    const socket = io("http://localhost:3000"); // Use the backend URL from .env
+    const socket = io("http://localhost:3000");
 
-    // Listen for new transaction events
-    socket.on('new_transaction', (newTransaction: Transaction) => {
+    socket.on("new_transaction", (newTransaction: Transaction) => {
       if (newTransaction.status.toLowerCase() === "succeeded") {
         addUniqueTransactions([newTransaction]);
-        setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
+        setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
+
+        setTotalDonations((prevTotal) => prevTotal + newTransaction.amount / 100);
       }
     });
 
-    // Clean up the socket connection on component unmount
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [transactions]);
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
-    
-    <Text style={styles.transactionItem}>
-      Amount: ${item.amount / 100}
-    </Text>
-  );
+  useEffect(() => {
+    const total = calculateTotalDonations(transactions);
+    setTotalDonations(total);
+  }, [transactions]);
 
   const formatDate = (unix: number) => {
     const date = new Date(unix * 1000);
-    const formattedDate = date.toLocaleDateString();
-    return formattedDate;
+    return date.toLocaleDateString();
   };
 
   return (
@@ -86,21 +86,20 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
       <Text style={styles.sectionTitle}>
         September <Text style={{ fontWeight: "700" }}>Spending</Text>
       </Text>
+    
 
-      {transactions.map((item) => {
-        return (
-          <View style={styles.spendingWrapper} key={item.id}>
-            <View style={styles.iconWrapper}>{icon}</View>
-            <View style={styles.textWrapper}>
-              <View style={{ gap: 5 }}>
-                <Text style={styles.itemName}>{item.description}</Text>
-                <Text style={{ color: Colors.white }}>{formatDate(item.created)}</Text>
-              </View>
-              <Text style={styles.itemName}>${item.amount / 100}</Text>
+      {transactions.map((item) => (
+        <View style={styles.spendingWrapper} key={item.id}>
+          <View style={styles.iconWrapper}>{icon}</View>
+          <View style={styles.textWrapper}>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.itemName}>{item.description}</Text>
+              <Text style={{ color: Colors.white }}>{formatDate(item.created)}</Text>
             </View>
+            <Text style={styles.itemName}>${(item.amount / 100).toFixed(2)}</Text>
           </View>
-        );
-      })}
+        </View>
+      ))}
     </View>
   );
 };
@@ -139,10 +138,5 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: "600",
-  },
-  transactionItem: {
-    color: Colors.white,
-    fontSize: 14,
-    marginVertical: 5,
   },
 });
