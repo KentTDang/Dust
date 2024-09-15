@@ -4,7 +4,7 @@ import Markdown from 'react-native-markdown-display';
 import { Stack } from 'expo-router';
 import { default as Colors } from '../../constants/Colors';
 
-const Agent = () => {
+const Charities = () => {
   const [userMessage, setUserMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -187,4 +187,4 @@ const markDownStyles = StyleSheet.create({
   }
 });
 
-export default Agent;
+export default Charities;

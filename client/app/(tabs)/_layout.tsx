@@ -18,7 +18,7 @@ const Layout = () => {
 
     return unsubscribe;
   },[]);
-  
+
   return (
     <>
       <Tabs
@@ -71,6 +71,22 @@ const Layout = () => {
                 }}
               >
                 <AntDesign name="swap" size={18} color={color} />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="charities"
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <View
+                style={{
+                  padding: 12,
+                  borderRadius: 30,
+                  backgroundColor: focused ? Colors.tintColor : Colors.grey,
+                }}
+              >
+                <AntDesign name="heart" size={18} color={color} />
               </View>
             ),
           }}
