@@ -1,19 +1,25 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { Stack } from 'expo-router';
 import { default as Colors } from '../../constants/Colors';
+import charitiesData from '../data/charities.json';
+import { AntDesign } from '@expo/vector-icons';
 
-const Agent = () => {
-  const [userMessage, setUserMessage] = useState('');
+const Charities = () => {
   const [aiResponse, setAiResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState(''); // Search query state
-  const charities = require('../data/charities.json');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [charities, setCharities] = useState<string[]>([]);
 
   // Use a ref to keep track of the current AbortController
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    // Load charities from the imported JSON file
+    setCharities(charitiesData.charities);
+  }, []);
 
   async function sendMessage(message: string) {
     // Abort the previous request if it exists
@@ -58,7 +64,7 @@ const Agent = () => {
   };
 
   // Filter charities based on search query
-  const filteredCharities = charities.charities.filter((charity: string) =>
+  const filteredCharities = charities.filter((charity: string) =>
     charity.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -67,14 +73,17 @@ const Agent = () => {
       <Stack.Screen options={{ headerShown: false }} />
 
       <View style={styles.container}>
-        {/* Search Input */}
+        <View style={[styles.input, {display: 'flex', flexDirection: 'row', alignItems: 'center', borderRadius: 17, height:50, width: '95%'}]}>
+        <AntDesign name="search1" size={20} color={Colors.white} />
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Search charities"
-          style={styles.input}
+          placeholder="Search Charities"
           placeholderTextColor={Colors.white}
+          style={{paddingLeft: 6, fontSize: 20}}
         />
+        </View>
+        
 
         <ScrollView style={styles.scrollView}>
           {filteredCharities.map((charity: string, index: number) => (
@@ -85,7 +94,7 @@ const Agent = () => {
               {expandedIndex === index && (
                 <View style={styles.dropdown}>
                   {loading ? (
-                    <Text style={styles.dropdownText}>Loading...</Text>
+                    <ActivityIndicator size="small" color={Colors.white} />
                   ) : (
                     <Markdown style={markDownStyles}>{aiResponse}</Markdown>
                   )}
@@ -94,15 +103,6 @@ const Agent = () => {
             </View>
           ))}
         </ScrollView>
-
-        {/* <Text style={styles.responseText}>AI Response:</Text>
-        <ScrollView style={styles.responseScrollView}>
-          {loading ? (
-            <Text style={styles.loadingText}>Loading...</Text>
-          ) : (
-            <Markdown>{aiResponse}</Markdown>
-          )}
-        </ScrollView> */}
       </View>
     </>
   );
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    textAlign: 'center',
+
   },
   dropdown: {
     backgroundColor: 'bebebe',
@@ -173,18 +173,13 @@ const styles = StyleSheet.create({
     height: 400,
     width: '100%',
   },
-  loadingText: {
-    color: Colors.white,
-  },
 });
 
 const markDownStyles = StyleSheet.create({
   body: {
     color: 'white',
+    fontSize: 18,
   },
-  paragraph: {
-    color: 'white'
-  }
 });
 
-export default Agent;
+export default Charities;
