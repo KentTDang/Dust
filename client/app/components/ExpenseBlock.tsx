@@ -36,9 +36,9 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
           styles.expenseBlock,
           {
             backgroundColor: 
-              item.name == "Food"
+              item.name == "Feeding America"
                 ? Colors.blue
-                : item.name == "Saving"
+                : item.name == "American Red Cross"
                 ? Colors.white
                 : Colors.tintColor,
           },
@@ -49,9 +49,9 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
             styles.expenseBlockTxt1,
             {
               color:
-                item.name == "Food"
+                item.name == "Feeding America"
                   ? Colors.black
-                  : item.name == "Saving"
+                  : item.name == "American Red Cross"
                   ? Colors.black
                   : Colors.white,
             },
@@ -64,9 +64,9 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
             styles.expenseBlockTxt2,
             {
               color:
-                item.name == "Food"
+                item.name == "Feeding America"
                   ? Colors.black
-                  : item.name == "Saving"
+                  : item.name == "American Red Cross"
                   ? Colors.black
                   : Colors.white,
             },
@@ -81,9 +81,9 @@ const ExpenseBlock = ({ expenseList }: { expenseList: ExpenseType[] }) => {
               styles.expenseBlockTxt1,
               {
                 color:
-                  item.name == "Food"
+                  item.name == "Feeding America"
                     ? Colors.black
-                    : item.name == "Saving"
+                    : item.name == "American Red Cross"
                     ? Colors.black
                     : Colors.white,
               },

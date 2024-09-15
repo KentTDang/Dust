@@ -2,39 +2,39 @@
 [
     {
       "id": "1",
-      "name": "AirBnB Rent",
-      "amount": "529.99",
-      "date": "2024-05-01"
+      "name": "Weis Market",
+      "amount": "59.32",
+      "date": "2024-09-013"
     },
     {
       "id": "2",
-      "name": "Netflix",
-      "amount": "10.99",
-      "date": "2024-05-02"
+      "name": "Gong Cha Bubble Tea",
+      "amount": "8.63",
+      "date": "2024-09-013"
     },
     {
       "id": "3",
-      "name": "Spotify",
-      "amount": "5.99",
-      "date": "2024-05-02"
+      "name": "Chick-Fil-A",
+      "amount": "10.34",
+      "date": "2024-09-013"
     },
     {
       "id": "4",
-      "name": "Amazon",
-      "amount": "234.69",
-      "date": "2024-05-06"
+      "name": "Target",
+      "amount": "19.16",
+      "date": "2024-09-012"
     },
     {
       "id": "5",
-      "name": "Figma",
-      "amount": "8.99",
-      "date": "2024-05-09"
+      "name": "Taste Tea",
+      "amount": "13.06",
+      "date": "2024-09-012"
     },
     {
       "id": "6",
-      "name": "Online Shopping",
-      "amount": "136.99",
-      "date": "2024-05-012"
+      "name": "Canteen Vending",
+      "amount": "2.00",
+      "date": "2024-09-012"
     }
   ]
   
