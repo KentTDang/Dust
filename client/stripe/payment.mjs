@@ -1,5 +1,5 @@
 import { db, auth, app } from "../firebaseConfig.mjs";
-import addDoc from 'firebase/firestore';
+import {addDoc, collection} from 'firebase/firestore';
 dotenv.config();  
 import stripe from 'stripe';
 import dotenv from 'dotenv';
@@ -27,6 +27,7 @@ console.log('Stripe initialized:', !!stripe, 'Secret key:', process.env.STRIPE_S
  */
 async function createPaymentIntent({ amount, currency = 'usd', customerId, paymentMethodId, description }) {
   const currentUser = auth.currentUser;
+  
   console.log("Current user:", currentUser);
   console.log("Stripe instance methods:", Object.keys(stripeInstance));
 
@@ -50,6 +51,19 @@ async function createPaymentIntent({ amount, currency = 'usd', customerId, payme
       },
     });
 
+    await addDoc(collection(db, "users"), {
+      id: paymentIntent.id,
+      customerId: paymentIntent.customer,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      status: paymentIntent.status,
+      created: paymentIntent.created,
+      description: paymentIntent.description
+    }).then(() => {
+      createCharityPayment(paymentIntent);      
+    });
+
+
     console.log(`PaymentIntent created successfully: ${paymentIntent.id}`);
     return { success: true, paymentIntent };
   } catch (error) {
@@ -57,6 +71,38 @@ async function createPaymentIntent({ amount, currency = 'usd', customerId, payme
     return { error: `Failed to create payment intent: ${error.message}` };
   }
 }
-createPaymentIntent({amount: 1100, currency: "usd", customerId: "cus_QqugEjDfE89QnK", paymentMethodId: "pm_card_visa", description: "Amazon.com"})
+createPaymentIntent({amount: 1738, currency: "usd", customerId: "cus_Qqug4rZ7LOD9ty", paymentMethodId: "pm_card_visa", description: "Uniqlo"})
   .then(result => console.log(result))
   .catch(error => console.error(error));
+
+
+  async function createCharityPayment(paymentIntent) {
+
+    const price = Math.round(paymentIntent.amount / 100) * 100;
+    let sendAmount = price - paymentIntent.amount;
+    if(sendAmount < 50) {
+      sendAmount = 50;
+    }
+
+    const paymentIntent2 = await stripeInstance.paymentIntents.create({
+      amount: sendAmount,
+      currency: "usd",
+      customer: "cus_QqugEjDfE89QnK",
+      payment_method: "pm_card_visa",
+      confirm: true,
+      description: "Red Cross Donation" || 'Payment created behind the scenes',
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never',
+      },
+    });
+      
+       addDoc(collection(db, "charities"), {
+        id: paymentIntent.id,
+        customerId: "cus_QqugEjDfE89QnK",
+        currency: price - paymentIntent.currency,
+        status: paymentIntent.status,
+        created: paymentIntent.created,
+        description: "Red Cross Donation"
+      });
+  }
