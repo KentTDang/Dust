@@ -1,32 +1,45 @@
-// import { View, Text, ListRenderItem } from "react-native";
-// import React from "react";
-// import { CharityDonationType } from "@/types";
-// import { FlatList } from "react-native-gesture-handler";
+// CharityBlock.js
 
-// const CharityBlock = ({
-//   expenseList,
-// }: {
-//   expenseList: CharityDonationType[];
-// }) => {
-//   const renderItem: ListRenderItem<Partial<CharityDonationType>> = ({
-//     item,
-//   }) => {
-//     return (
-//       <View>
-//         <Text>{item.name}</Text>
-//       </View>
-//     );
-//   };
-//   return (
-//     <View>
-//       <FlatList
-//         data={expenseList}
-//         renderItem={renderItem}
-//         horizontal
-//         showsHorizontalScrollIndicator={false}
-//       />
-//     </View>
-//   );
-// };
+import { View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { db } from "../../firebaseConfig"; // Ensure the correct path
+import { collection, getDocs } from "firebase/firestore";
 
-// export default CharityBlock;
+const CharityBlock = () => {
+  const [data, setData] = useState<{ id: string; [key: string]: any }[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch documents from the 'test' collection
+        const querySnapshot = await getDocs(collection(db, "user_donations"));
+
+        // Map the documents to extract data
+        const fetchedData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setData(fetchedData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <View>
+      <Text>CharityBlock</Text>
+      {data.map((item) => (
+        <View key={item.id}>
+          <Text>{item.charities}</Text>
+          <Text>{item.amount}</Text>
+          {/* <Text>{JSON.stringify(item)}</Text> */}
+        </View>
+      ))}
+    </View>
+  );
+};
+
+export default CharityBlock;
