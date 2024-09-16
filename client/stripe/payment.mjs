@@ -103,7 +103,6 @@ createPaymentIntent({amount: 719, currency: "usd", customerId: "cus_Qqz1vDUETm5s
       },
     });
       
-       addDoc(collection(db, "charities"), {
     try{
       const paymentIntent2 = await stripeInstance.paymentIntents.create({
         amount: sendAmount,

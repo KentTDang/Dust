@@ -22,7 +22,6 @@ interface Transaction {
 export const calculateTotalDonations = (transactions: Transaction[]): number => {
   return transactions.reduce((acc, transaction) => acc + transaction.amount, 0) / 100;
 };
-}
 
 
 
@@ -54,7 +53,6 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     description: 'Red Cross Donation',
   }
 
-
   useEffect(() => {
     // Fetch transactions and calculate total donations
     fetchTransactions().then((data) => {
@@ -72,33 +70,25 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     socket.on("new_transaction", (newTransaction: Transaction) => {
       if (newTransaction.status.toLowerCase() === "succeeded") {
         addUniqueTransactions([newTransaction]);
-        setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
+        setTransactions((prevTransactions) => {
+          const updatedTransactions = [newTransaction, ...prevTransactions];
+          
+          // Loop through transactions
+          updatedTransactions.forEach((transaction: Transaction) => {
+            let roundedAmount = Math.round(transaction.amount / 100) * 100;
+            let changeAmount = roundedAmount - transaction.amount;
+            if (!updatedTransactions.find(trans => trans.amount === changeAmount)) {
+              // Handle the case where there's no matching transaction for the change amount
+              // You might want to add some logic here
+            }
+          });
+
+          return updatedTransactions;
+        });
 
         setTotalDonations((prevTotal) => prevTotal + newTransaction.amount / 100);
-      // Loop through transactions
-      succeededTransactions.map((transaction: Transaction) => {
-        let roundedAmount = Math.round(transaction.amount / 100);
-        roundedAmount = roundedAmount * 100
-        let changeAmount = roundedAmount - transaction.amount
-        if(transactions.find(trans => trans.amount !== changeAmount)) {
-        }
-      });
-    });
-
-    const socket = io("http://localhost:3000"); 
-
-    socket.on('new_transaction', (newTransaction: Transaction) => {
-      if (newTransaction.status.toLowerCase() === "succeeded") {
-        setTransactions(prevTransactions => [newTransaction, ...prevTransactions]);
-
-        // Loop through transactions
-        [newTransaction].map((transaction) => {
-          console.log(transaction);
-          // ... other operations ...
-        });
       }
     });
-    
 
     return () => {
       socket.disconnect();
@@ -142,8 +132,10 @@ const SpendingBlock = ({ spendingList }: { spendingList: SpendingType[] }) => {
     </View>
   );
 };
-
+}
 export default SpendingBlock;
+
+
 
 const styles = StyleSheet.create({
   spendingSectionWrapper: {
