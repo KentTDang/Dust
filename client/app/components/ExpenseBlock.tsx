@@ -114,8 +114,8 @@ const ExpenseBlock = ({ expenseList, customerId }: { expenseList: ExpenseType[],
             },
           ]}
         >
-          ${test2[0]}.
-          <Text style={styles.expenseBlockTxt2Span}>{test2[1]}</Text>
+          ${amount[0]}.
+          <Text style={styles.expenseBlockTxt2Span}>{amount[1]}</Text>
         </Text>
         <View style={styles.expenseBlock3View}>
           <Text

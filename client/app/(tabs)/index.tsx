@@ -45,6 +45,7 @@ const Page = () => {
     fetchDonations();
   }, []);
   
+  
   const dPoint = () => {
     return (
       <View
@@ -59,6 +60,89 @@ const Page = () => {
       />
     );
   };
+  const latestData = [
+    {
+      value: 100,
+      // labelComponent: () => ('22 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 120,
+      hideDataPoint: true,
+    },
+    {
+      value: 210,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 250,
+      hideDataPoint: true,
+    },
+    {
+      value: 320,
+      // labelComponent: () => lcomp('24 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 310,
+      hideDataPoint: true,
+    },
+    {
+      value: 270,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 240,
+      hideDataPoint: true,
+    },
+    {
+      value: 130,
+      // labelComponent: () => lcomp('26 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 120,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 210,
+      hideDataPoint: true,
+    },
+    {
+      value: 270,
+      // labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 240,
+      hideDataPoint: true,
+    },
+    {
+      value: 120,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 210,
+      // labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 20,
+      hideDataPoint: true,
+    },
+    {
+      value: 100,
+      customDataPoint: dPoint,
+    },
+  ];
 
   return (
     <>
@@ -84,7 +168,6 @@ const Page = () => {
                 style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}
               >
                 $86.<Text style={{ fontSize: 22, fontWeight: 400 }}>06</Text>
-                ${totalDonations}
               </Text>
             </View>
           </View>
@@ -100,14 +183,14 @@ const Page = () => {
               isAnimated
               thickness={3}
               color="#07BAD1"
-              maxValue={9000}
+              maxValue={600}
               noOfSections={3}
               animateOnDataChange
               animationDuration={1000}
               onDataChangeAnimationDuration={300}
               areaChart
               yAxisTextStyle={{ color: "lightgray" }}
-              data={donations}
+              data={latestData}
               hideDataPoints
               startFillColor={"rgb(84,219,234)"}
               endFillColor={"rgb(84,219,234)"}
@@ -124,7 +207,7 @@ const Page = () => {
           </View>
           <ExpenseBlock expenseList={ExpenseList} customerId="cus_Qqz1iRvKc0cOXp" />
           {/* <IncomeBlock incomeList={incomeList} /> */}
-          <SpendingBlock spendingList={spendingList} />
+          <SpendingBlock />
         </ScrollView>
       </View>
     </>
