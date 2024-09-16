@@ -175,7 +175,7 @@ const Page = () => {
           <View
             style={{
               marginVertical: 0,
-              paddingVertical: 50,
+              paddingTop: 20,
               backgroundColor: Colors.black,
             }}
           >
