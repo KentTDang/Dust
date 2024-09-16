@@ -57,7 +57,7 @@ const Page = () => {
           }}
         >
           <Text style={{ color: Colors.white, fontSize: 36, fontWeight: 700 }}>
-            $1475.<Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
+            $86.<Text style={{ fontSize: 22, fontWeight: 400 }}>06</Text>
           </Text>
           <Text style={{ color: Colors.white, fontSize: 16 }}>
             Total in Donations
